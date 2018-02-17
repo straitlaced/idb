@@ -18,13 +18,14 @@ def about():
     iss_total = 0
     for i in range(0, 5):
         iss_count.append(0)
-    req = requests.get('https://api.github.com/repos/hrfofut/idb/stats/contributors')
+    req = requests.get('https://api.github.com/repos/hrfofut/idb/stats/contributors', auth=('straitlaced'))
     req_list = req.json()
     commit_count = {'total': 0}
-    for contributor in req_list:
-        commit_count[contributor['author']['login']] = contributor['total']
-        commit_count['total'] += contributor['total']
-    req_issue = requests.get('https://api.github.com/repos/hrfofut/idb/issues?state=all&page=1&per_page=500')
+    if type(req_list) is dict:
+        for contributor in req_list:
+            commit_count[contributor['author']['login']] = contributor['total']
+            commit_count['total'] += contributor['total']
+        req_issue = requests.get('https://api.github.com/repos/hrfofut/idb/issues?state=all&page=1&per_page=500')
     for issue in (req_issue.json()):
         iss_total += 1
         iss_count[logins[issue['user']['login']]] += 1
